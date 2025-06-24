@@ -16,8 +16,5 @@ file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 add_executable(taoq ${SOURCES})
 
-file(COPY "${PROJECT_SOURCE_DIR}/quotes.txt" DESTINATION "${PROJECT_BINARY_DIR}")
-
 install(TARGETS taoq DESTINATION bin)
 install(IMPORTED_RUNTIME_ARTIFACTS fmt::fmt DESTINATION bin)
-install(FILES ${PROJECT_BINARY_DIR}/quotes.txt DESTINATION bin)

@@ -6,16 +6,14 @@
 #include <random>
 #include <string>
 
-std::string getExecutableDir() {
-  return std::filesystem::canonical("/proc/self/exe").parent_path();
-}
 std::string pickRandomQuote() {
   static std::mt19937 rng(std::random_device{}());
   static std::uniform_int_distribution<std::streamsize> distrib;
   using paramType = decltype(distrib)::param_type;
 
   std::string quote;
-  std::filesystem::path path = getExecutableDir() + "/quotes.txt";
+  std::filesystem::path path = std::getenv("HOME");
+  path += "/quotes.txt";
   if (std::ifstream file{path}) {
     std::streamsize linesRead = 0;
     std::string line;
@@ -25,9 +23,6 @@ std::string pickRandomQuote() {
       // replace the selected line with the second line with a probability of
       // 1/2 replace the selected line with the third line with a probability of
       // 1/3 etc.
-      while (!line.empty() && (line.back() == '\r' || line.back() == '\n')) {
-        line.pop_back();
-      }
       distrib.param(paramType(0, linesRead));
       ++linesRead;
       if (distrib(rng) == 0) {
@@ -35,14 +30,12 @@ std::string pickRandomQuote() {
       }
     }
   } else {
-    return "Couldnt open quotes.txt";
+    return "";
   }
   return quote;
 }
 
 int main() {
-
-  fmt::print("{}", pickRandomQuote());
-
+  fmt::println("{}", pickRandomQuote());
   return EXIT_SUCCESS;
 }

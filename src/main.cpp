@@ -1,8 +1,8 @@
 #include <filesystem>
 #include <fmt/format.h>
 
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 #include <random>
 #include <string>
 
@@ -25,6 +25,9 @@ std::string pickRandomQuote() {
       // replace the selected line with the second line with a probability of
       // 1/2 replace the selected line with the third line with a probability of
       // 1/3 etc.
+      while (!line.empty() && (line.back() == '\r' || line.back() == '\n')) {
+        line.pop_back();
+      }
       distrib.param(paramType(0, linesRead));
       ++linesRead;
       if (distrib(rng) == 0) {

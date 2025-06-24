@@ -1,29 +1,13 @@
+#include <filesystem>
 #include <fmt/format.h>
 
 #include <fstream>
+#include <filesystem>
 #include <random>
 #include <string>
 
 std::string getExecutableDir() {
-  std::ifstream exe("/proc/self/exe");
-  if (!exe.is_open()) {
-    return "";
-  }
-  // /proc/self/exe is a symlink, so read its target
-  char buffer[1024];
-  exe.read(buffer, sizeof(buffer) - 1);
-  std::streamsize len = exe.gcount();
-  if (len <= 0) {
-    return "";
-  }
-  buffer[len] = '\0';
-  // Find the last '/' to get the directory
-  std::string path(buffer);
-  std::size_t last_slash = path.find_last_of('/');
-  if (last_slash == std::string::npos) {
-    return "";
-  }
-  return path.substr(0, last_slash);
+  return std::filesystem::canonical("/proc/self/exe").parent_path();
 }
 std::string pickRandomQuote() {
   static std::mt19937 rng(std::random_device{}());
@@ -31,7 +15,8 @@ std::string pickRandomQuote() {
   using paramType = decltype(distrib)::param_type;
 
   std::string quote;
-  if (std::ifstream file{getExecutableDir() + "quotes.txt"}) {
+  std::filesystem::path path = getExecutableDir() + "/quotes.txt";
+  if (std::ifstream file{path}) {
     std::streamsize linesRead = 0;
     std::string line;
 

@@ -1,8 +1,8 @@
 #include <filesystem>
-#include <fmt/format.h>
 
 #include <filesystem>
 #include <fstream>
+#include <print>
 #include <random>
 #include <string>
 
@@ -36,6 +36,6 @@ std::string pickRandomQuote() {
 }
 
 int main() {
-  fmt::println("{}", pickRandomQuote());
+  std::println("{}", pickRandomQuote());
   return EXIT_SUCCESS;
 }
